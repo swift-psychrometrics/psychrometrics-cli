@@ -53,7 +53,9 @@ extension FileClient: DependencyKey {
         try Data(contentsOf: path)
       },
       moveToTrash: { path in
+        #if !os(Linux)
         try FileManager.default.trashItem(at: path, resultingItemURL: nil)
+        #endif
       },
       writeFile: { data, path in
         try data.write(to: path)

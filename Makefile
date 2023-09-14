@@ -35,7 +35,22 @@ uninstall:
 .PHONY: clean
 clean:
 	rm -rf .build
-	
+
 .PHONY: run-publish-workflow
 run-publish-workflow:
 	gh workflow run publish.yml
+
+.PHONY: test-linux
+test-linux:
+		docker run \
+			--rm \
+			-v "$(PWD):$(PWD)" \
+			-w "$(PWD)" \
+			swift:5.8 \
+			swift test
+
+.PHONY: test-swift
+test-swift:
+	swift test \
+		--enable-test-discovery \
+		--parallel

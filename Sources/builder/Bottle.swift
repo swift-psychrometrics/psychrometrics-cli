@@ -3,6 +3,9 @@ import Dependencies
 import FileClient
 import Foundation
 import ShellClient
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 extension Builder {
   struct Bottle: AsyncParsableCommand {
