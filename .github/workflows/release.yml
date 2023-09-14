@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    name: Create a release.
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Release Text
+        run: echo ${{ github.sha }} > Release.txt
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          generate_release_notes: true
+          files: |
+            Release.txt
+            LICENSE
+            README.md
+          prerelease: contains(github.ref, '-')
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+  bottle:
+    name: Bottle
+    if: ${{ always() }}
+    needs:
+      - release
+    strategy:
+      matrix:
+        os: [macos-12, macos-13]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Bottle
+        run: make bottle
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Upload bottle
+        run: make upload-bottle
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
