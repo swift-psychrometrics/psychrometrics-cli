@@ -1,6 +1,7 @@
 // swift-tools-version: 5.7
 
 import PackageDescription
+import Foundation
 
 let package = Package(
   name: "psychrometrics-cli",
@@ -66,10 +67,11 @@ let package = Package(
         "CLIDependency",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
         .product(name: "PsychrometricClientLive", package: "swift-psychrometrics")
-      ],
-      plugins: [
-        .plugin(name: "BuildWithVersionPlugin", package: "swift-cli-version")
       ]
+//      ,
+//      plugins: [
+//        .plugin(name: "BuildWithVersionPlugin", package: "swift-cli-version")
+//      ]
     ),
     .testTarget(
       name: "psychrometrics-cliTests",
@@ -77,3 +79,30 @@ let package = Package(
     ),
   ]
 )
+
+//#if !os(Linux)
+//package.targets.append(contentsOf: [
+//  .executableTarget(
+//    name: "psychrometrics-cli",
+//    dependencies: [
+//      "CLIDependency",
+//      .product(name: "ArgumentParser", package: "swift-argument-parser"),
+//      .product(name: "PsychrometricClientLive", package: "swift-psychrometrics")
+//    ],
+//    plugins: [
+//      .plugin(name: "BuildWithVersionPlugin", package: "swift-cli-version")
+//    ]
+//  ),
+//])
+//#else
+//package.targets.append(contentsOf: [
+//  .executableTarget(
+//    name: "psychrometrics-cli",
+//    dependencies: [
+//      "CLIDependency",
+//      .product(name: "ArgumentParser", package: "swift-argument-parser"),
+//      .product(name: "PsychrometricClientLive", package: "swift-psychrometrics")
+//    ]
+//  ),
+//])
+//#endif

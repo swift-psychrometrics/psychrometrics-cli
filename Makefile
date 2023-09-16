@@ -4,9 +4,10 @@ COMPLETIONDIR = $(PREFIX)/completions
 LIBDIR = $(PREFIX)/lib
 BOTTLE = "$(shell ls *.gz)"
 VERSION := "$(shell psychrometrics --version)"
+DOCKER_TAG := latest
 
 .PHONY: bottle
-bottle:
+bottle: set-version
 	swift run --configuration release --disable-sandbox builder bottle
 	@echo "Run 'make upload-bottle', once you've updated the formula"
 
@@ -18,9 +19,20 @@ upload-bottle:
 remove-bottle:
 	rm -rf "$(BOTTLE)"
 
+.PHONY: set-version
+set-version:
+	swift package --disable-sandbox \
+		--allow-writing-to-package-directory \
+		update-version \
+		psychrometrics-cli
+
 .PHONY: build
-build:
+build: clean set-version
 	swift run --configuration release --disable-sandbox builder build
+
+.PHONY: build-docker
+build-docker: clean
+	docker build -t "m-housh/psychrometrics:$(DOCKER_TAG)" "$(PWD)"
 
 .PHONY: install
 install: build
