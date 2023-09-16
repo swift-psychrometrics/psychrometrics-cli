@@ -28,7 +28,7 @@ set-version:
 
 .PHONY: build
 build: clean set-version
-	swift run --configuration release --disable-sandbox builder build
+	swift build --configuration release
 
 .PHONY: build-docker
 build-docker: clean
