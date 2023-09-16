@@ -28,10 +28,12 @@ jobs:
             README.md
           prerelease: contains(github.ref, '-')
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      - name: Build and Publish Docker Image
-        uses: ./.github/workflows/publish-docker-image
-        with:
-          push: true
+
+  publish-image:
+    name: Build and Publish Docker Image
+    uses: ./.github/workflows/publish-docker-image.yml
+      with:
+        push: true
 
   bottle:
     name: Bottle

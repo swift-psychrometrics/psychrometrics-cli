@@ -1,6 +1,6 @@
 # Create a release when a new tag is pushed.
 #
-name: Publish Development Image
+name: Publish Docker Image
 
 on:
   workflow_call:
