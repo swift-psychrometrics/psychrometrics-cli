@@ -34,10 +34,7 @@ on:
         default: false
         required: false
         type: boolean
-    secrets:
-      token:
-        description: 'The authentication to use for the registry.'
-        required: true
+    secrets: inherit
 
 jobs:
   build-and-push-image:
@@ -51,7 +48,7 @@ jobs:
         with:
           registry: ${{ inputs.registry }}
           username: ${{ inputs.username }}
-          password: ${{ token }}
+          password: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
