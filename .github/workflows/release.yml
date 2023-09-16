@@ -29,9 +29,8 @@ jobs:
           prerelease: contains(github.ref, '-')
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Build and Publish Docker Image
-        uses: ./.github/workflows/publish-docker-image.yml
+        uses: ./.github/workflows/publish-docker-image
         with:
-          file: ./Dockerfile
           push: true
 
   bottle:
