@@ -28,12 +28,7 @@ jobs:
             README.md
           prerelease: contains(github.ref, '-')
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-  publish-image:
-    name: Publish Docker Image
-    runs-on: ubuntu-latest
-    steps:
-      - name: Publish Image
+      - name: Publish Docker Image
         uses: ./.github/workflows/publish-docker-image.yml
         with:
           push: true
