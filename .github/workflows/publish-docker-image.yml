@@ -51,7 +51,7 @@ jobs:
         with:
           registry: ${{ inputs.registry }}
           username: ${{ inputs.username }}
-          password: ${{ secrets.token }}
+          password: ${{ token }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
