@@ -33,8 +33,8 @@ jobs:
         with:
           file: ./Dockerfile
           push: true
-        secrets:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          secrets:
+            token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
   bottle:
     name: Bottle
