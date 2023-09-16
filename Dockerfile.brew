@@ -1,4 +1,0 @@
-FROM homebrew/brew
-
-RUN brew install swift
-
