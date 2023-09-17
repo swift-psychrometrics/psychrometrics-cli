@@ -2,6 +2,8 @@ import ArgumentParser
 import Foundation
 import SharedModels
 
+// TODO: Fix the options to be more generic.
+
 // Represents common options for many of the commands.
 struct MoistAirOptions: ParsableArguments {
 
@@ -49,6 +51,16 @@ struct MoistAirOptions: ParsableArguments {
   }
 
   var includeSymbols: Bool { symbols }
+}
+
+struct BaseOptions: ParsableArguments {
+  
+  @Flag(help: "The units of measure.")
+  var units: PsychrometricUnits = .imperial
+  
+  @Flag(name: .long, help: "Increase output logging.")
+  var verbose: Bool = false
+  
 }
 
 extension PsychrometricUnits: EnumerableFlag { }

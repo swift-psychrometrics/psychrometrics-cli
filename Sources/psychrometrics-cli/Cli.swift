@@ -1,4 +1,5 @@
 import ArgumentParser
+import CLIClientLive
 import PsychrometricClientLive
 
 @main

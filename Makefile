@@ -7,7 +7,7 @@ VERSION := "$(shell psychrometrics --version)"
 DOCKER_TAG := latest
 
 .PHONY: bottle
-bottle: set-version
+bottle:
 	swift run --configuration release --disable-sandbox builder bottle
 	@echo "Run 'make upload-bottle', once you've updated the formula"
 
@@ -27,7 +27,7 @@ set-version:
 		psychrometrics-cli
 
 .PHONY: build
-build: clean set-version
+build: clean
 	swift run --configuration release --disable-sandbox builder build
 
 .PHONY: build-docker

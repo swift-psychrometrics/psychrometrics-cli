@@ -10,7 +10,8 @@ let package = Package(
   ],
   products: [
     .executable(name: "builder", targets: ["builder"]),
-    .library(name: "CLIDependency", targets: ["CLIDependency"]),
+    .library(name: "CLIClient", targets: ["CLIClient"]),
+    .library(name: "CLIClientLive", targets: ["CLIClientLive"]),
     .library(name: "FileClient", targets: ["FileClient"]),
     .executable(name: "psychrometrics", targets: ["psychrometrics-cli"]),
   ],
@@ -49,8 +50,16 @@ let package = Package(
       ]
     ),
     .target(
-      name: "CLIDependency",
+      name: "CLIClient",
       dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SharedModels", package: "swift-psychrometrics")
+      ]
+    ),
+    .target(
+      name: "CLIClientLive",
+      dependencies: [
+        "CLIClient",
         .product(name: "PsychrometricClient", package: "swift-psychrometrics")
       ]
     ),
@@ -64,14 +73,10 @@ let package = Package(
     .executableTarget(
       name: "psychrometrics-cli",
       dependencies: [
-        "CLIDependency",
+        "CLIClientLive",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
         .product(name: "PsychrometricClientLive", package: "swift-psychrometrics")
       ]
-//      ,
-//      plugins: [
-//        .plugin(name: "BuildWithVersionPlugin", package: "swift-cli-version")
-//      ]
     ),
     .testTarget(
       name: "psychrometrics-cliTests",
@@ -79,30 +84,3 @@ let package = Package(
     ),
   ]
 )
-
-//#if !os(Linux)
-//package.targets.append(contentsOf: [
-//  .executableTarget(
-//    name: "psychrometrics-cli",
-//    dependencies: [
-//      "CLIDependency",
-//      .product(name: "ArgumentParser", package: "swift-argument-parser"),
-//      .product(name: "PsychrometricClientLive", package: "swift-psychrometrics")
-//    ],
-//    plugins: [
-//      .plugin(name: "BuildWithVersionPlugin", package: "swift-cli-version")
-//    ]
-//  ),
-//])
-//#else
-//package.targets.append(contentsOf: [
-//  .executableTarget(
-//    name: "psychrometrics-cli",
-//    dependencies: [
-//      "CLIDependency",
-//      .product(name: "ArgumentParser", package: "swift-argument-parser"),
-//      .product(name: "PsychrometricClientLive", package: "swift-psychrometrics")
-//    ]
-//  ),
-//])
-//#endif

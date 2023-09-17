@@ -1,5 +1,5 @@
 import ArgumentParser
-import CLIDependency
+import CLIClient
 import Dependencies
 import Foundation
 
