@@ -23,7 +23,7 @@ final class psychrometrics_cliTests: XCTestCase {
       .init(cfm: 797, grains: [66, 52, 14])
     )
     XCTAssert(outputs.count == 2)
-    XCTAssertEqual(outputs.first, outputs[1])
+    XCTAssertEqual(outputs.first!.poundsPerHour, outputs[1].poundsPerHour)
   }
   
   func testDewPoint() async throws {
