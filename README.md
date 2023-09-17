@@ -1,3 +1,5 @@
+[![CI](https://github.com/swift-psychrometrics/psychrometrics-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-psychrometrics/psychrometrics-cli/actions/workflows/ci.yml)
+ 
 # psychrometrics-cli
 
 A command line tool for calculating psychrometric properties.

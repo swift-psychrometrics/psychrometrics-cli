@@ -10,19 +10,39 @@ struct GrainsCommand: AsyncParsableCommand {
     abstract: "Calculate the grains of moisture in an air stream."
   )
 
-  @OptionGroup var globals: MoistAirOptions
+  @Option(
+    name: .shortAndLong,
+    help: "The altitude of the project."
+  )
+  var altitude: Double = 0
+  
+  @Option(
+    name: .shortAndLong,
+    help: "The dry bulb temperature of the air stream."
+  )
+  var dryBulb: Double
+  
+  @Option(
+    name: .shortAndLong,
+    help: "The relative humidity of the air stream."
+  )
+  var relativeHumidity: Double
+  
+  @OptionGroup var globals: BasePsychrometricOptions
 
   func run() async throws {
     @Dependency(\.cliClient) var cliClient
-    @Dependency(\.psychrometricClient.grainsOfMoisture) var grains
 
-    let grainsValue = try await grains(
-      .dryBulb(
-        globals.dryBulbTemperature,
-        relativeHumidity: globals.relativeHumidityValue,
-        altitude: globals.altitudeValue
+    let output = try await cliClient.grains(
+      .init(
+        altitude: self.altitude,
+        dryBulb: self.dryBulb,
+        relativeHumidity: self.relativeHumidity,
+        units: globals.units
       )
     )
-    print("\(cliClient.string(grainsValue.rawValue))\(globals.includeSymbols ? " gr/lb" : "")")
+      .map { cliClient.string($0, withSymbol: globals.includeSymbols) }
+    
+    print(output)
   }
 }

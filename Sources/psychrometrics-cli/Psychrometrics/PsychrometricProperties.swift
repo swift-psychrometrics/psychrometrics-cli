@@ -16,6 +16,12 @@ struct PsychrometricProperties: AsyncParsableCommand {
   
   @Option(
     name: .shortAndLong,
+    help: "The altitude of the project."
+  )
+  var altitude: Double = 0
+  
+  @Option(
+    name: .shortAndLong,
     help: "The dry bulb temperature of the air stream."
   )
   var dryBulb: Double
@@ -38,23 +44,10 @@ struct PsychrometricProperties: AsyncParsableCommand {
     help: "The wet bulb point temperature of the air stream."
   )
   var wetBulb: Double?
-  
-  @Option(
-    name: .shortAndLong,
-    help: "The altitude of the project."
-  )
-  var altitude: Double = 0
 
-  @Flag(
-    name: .long,
-    inversion: .prefixedEnableDisable,
-    help: "Include symbols in the output."
-  )
-  var symbols: Bool = true
+  @OptionGroup var globals: BasePsychrometricOptions
   
-  var includeSymbols: Bool { symbols }
-
-  @OptionGroup var globals: BaseOptions
+  var includeSymbols: Bool { globals.includeSymbols }
 
   func run() async throws {
     @Dependency(\.cliClient) var cliClient
@@ -78,9 +71,9 @@ struct PsychrometricProperties: AsyncParsableCommand {
     print("Dew Point Temperature:   \(cliClient.string(properties.dewPoint.rawValue, withSymbol: self.includeSymbols))")
     print("Dry Bulb Temperature:    \(cliClient.string(properties.dryBulb.rawValue, withSymbol: self.includeSymbols))")
     print("Enthalpy:                \(cliClient.string(properties.enthalpy.rawValue, withSymbol: self.includeSymbols))")
-    print("Grains of Moisture:      \(cliClient.string(properties.grainsOfMoisture.rawValue)) \(self.includeSymbols ? "gr/lb" : "")")
+    print("Grains of Moisture:      \(cliClient.string(properties.grainsOfMoisture, withSymbol: self.includeSymbols))")
     print("Humidity Ratio:          \(cliClient.string(properties.humidityRatio.value))")
-    print("Relative Humidity:       \(cliClient.string(properties.relativeHumidity.value, decimalPlaces: 0))\(self.includeSymbols ? "%" : "")")
+    print("Relative Humidity:       \(cliClient.string(properties.relativeHumidity, decimalPlaces: 0, symbolPrefix: "", withSymbol: self.includeSymbols))")
     print("Specific Volume:         \(cliClient.string(properties.specificVolume.rawValue))")
     print("Vapor Pressure:          \(cliClient.string(properties.vaporPressure.rawValue, withSymbol: self.includeSymbols))")
     print("Wet Bulb Temperature:    \(cliClient.string(properties.wetBulb.rawValue, withSymbol: self.includeSymbols))")
