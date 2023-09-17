@@ -1,7 +1,9 @@
+import ArgumentParser
 @_exported import CLIClient
 import Dependencies
 import Foundation
 import PsychrometricClient
+import Rainbow
 
 extension CLIClient: DependencyKey {
   
@@ -55,11 +57,11 @@ extension CLIClient.PropertiesRequest {
       )
     }
     
-    throw InvalidInputs()
+    throw ValidationError("""
+    A dew-point, relative-humidity, or wet-bulb is required.
+    """.red.bold)
   }
 }
-
-struct InvalidInputs: Error { }
 
 fileprivate func formatter(decimalPlaces: Int?) -> NumberFormatter {
   let formatter = NumberFormatter()

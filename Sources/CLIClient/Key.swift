@@ -93,10 +93,6 @@ extension TemperatureUnit: Symbolic { }
 
 extension CLIClient: TestDependencyKey {
 
-//  public static var liveValue: CLIClient = Self.init(
-//    numberFormatter: formatter
-//  )
-
   public static var testValue: CLIClient = Self.init(
     numberFormatter: unimplemented("\(Self.self).numberFormatter", placeholder: NumberFormatter.init()), 
     properties: unimplemented("\(Self.self).properties", placeholder: .zero))

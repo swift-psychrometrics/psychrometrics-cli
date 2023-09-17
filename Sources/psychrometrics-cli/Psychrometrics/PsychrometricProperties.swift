@@ -58,7 +58,6 @@ struct PsychrometricProperties: AsyncParsableCommand {
 
   func run() async throws {
     @Dependency(\.cliClient) var cliClient
-//    @Dependency(\.psychrometricClient.psychrometricProperties) var psychrometricProperties
 
     let properties = try await cliClient.properties(.init(
       altitude: self.altitude,
@@ -89,50 +88,4 @@ struct PsychrometricProperties: AsyncParsableCommand {
     print("-----------------------------------")
     print()
   }
-  
-  struct Inputs: Equatable {
-    var altitude: Double
-    var dryBulb: Double
-    var dewPoint: Double?
-    var relativeHumdity: Double?
-    var wetBulb: Double?
-    var units: PsychrometricUnits
-    
-    func output(client: PsychrometricClient) async throws -> SharedModels.PsychrometricProperties {
-      let altitude = Length(self.altitude, units: .defaultFor(units: self.units))
-      let dryBulb = DryBulb(.init(self.dryBulb, units: .defaultFor(units: self.units)))
-      if let dewPoint = self.dewPoint {
-        return try await client.psychrometricProperties(
-          .dewPoint(
-            .init(.init(dewPoint, units: .defaultFor(units: self.units))),
-            dryBulb: dryBulb,
-            altitude: altitude,
-            units: units
-          ))
-      }
-      if let relativeHumidity = self.relativeHumdity {
-        return try await client.psychrometricProperties(
-          .dryBulb(
-            dryBulb,
-            relativeHumidity: relativeHumidity%,
-            altitude: altitude,
-            units: units
-          ))
-      }
-      if let wetBulb = self.wetBulb {
-        return try await client.psychrometricProperties(
-          .wetBulb(
-            .init(.init(wetBulb, units: .defaultFor(units: self.units))),
-            dryBulb: dryBulb,
-            altitude: altitude,
-            units: units
-          )
-        )
-      }
-      
-      throw InvalidInputs()
-    }
-  }
 }
-
-struct InvalidInputs: Error { }

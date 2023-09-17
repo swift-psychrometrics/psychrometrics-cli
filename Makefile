@@ -4,11 +4,18 @@ COMPLETIONDIR = $(PREFIX)/completions
 LIBDIR = $(PREFIX)/lib
 BOTTLE = "$(shell ls *.gz)"
 VERSION := "$(shell psychrometrics --version)"
+
+CONFIG := release
+TAP = swift-psychrometrics/formula
+FORMULA = psychrometrics
 DOCKER_TAG := latest
 
 .PHONY: bottle
 bottle:
-	swift run --configuration release --disable-sandbox builder bottle
+	brew uninstall "$(FORMULA)" || true
+	brew tap "$(TAP)"
+	brew install --build-bottle "$(FORMULA)"
+	brew bottle "$(FORMULA)"
 	@echo "Run 'make upload-bottle', once you've updated the formula"
 
 .PHONY: upload-bottle
@@ -28,7 +35,8 @@ set-version:
 
 .PHONY: build
 build: clean
-	swift run --configuration release --disable-sandbox builder build
+	swift build --configuration $(CONFIG) \
+		-Xswiftc -cross-module-optimization
 
 .PHONY: build-docker
 build-docker: clean

@@ -4,12 +4,7 @@ COPY . /build
 
 WORKDIR /build
 
-RUN swift package --disable-sandbox \
-  --allow-writing-to-package-directory \
-  update-version \
-  psychrometrics-cli
-
-RUN swift build --configuration release
+RUN swift build --configuration release -Xswiftc -cross-module-optimization
 
 FROM build
 
