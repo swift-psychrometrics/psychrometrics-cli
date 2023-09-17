@@ -16,6 +16,16 @@ final class psychrometrics_cliTests: XCTestCase {
 
   }
   
+  func testDHClientPounds() async throws {
+    @Dependency(\.cliClient) var client
+    
+    let outputs = try await client.dhClient.poundsRemoved(
+      .init(cfm: 797, grains: [66, 52, 14])
+    )
+    XCTAssert(outputs.count == 2)
+    XCTAssertEqual(outputs.first, outputs[1])
+  }
+  
   func testDewPoint() async throws {
     @Dependency(\.cliClient) var client
     

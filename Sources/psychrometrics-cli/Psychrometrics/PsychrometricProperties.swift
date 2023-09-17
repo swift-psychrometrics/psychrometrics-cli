@@ -45,7 +45,7 @@ struct PsychrometricProperties: AsyncParsableCommand {
   )
   var wetBulb: Double?
 
-  @OptionGroup var globals: BasePsychrometricOptions
+  @OptionGroup var globals: BaseOptionsWithUnits
   
   var includeSymbols: Bool { globals.includeSymbols }
 

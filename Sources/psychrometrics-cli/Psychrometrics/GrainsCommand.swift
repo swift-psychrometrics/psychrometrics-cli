@@ -28,7 +28,7 @@ struct GrainsCommand: AsyncParsableCommand {
   )
   var relativeHumidity: Double
   
-  @OptionGroup var globals: BasePsychrometricOptions
+  @OptionGroup var globals: BaseOptionsWithUnits
 
   func run() async throws {
     @Dependency(\.cliClient) var cliClient

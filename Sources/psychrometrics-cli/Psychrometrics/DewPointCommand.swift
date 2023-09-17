@@ -72,7 +72,7 @@ struct DewPointCommand: AsyncParsableCommand {
   )
   var wetBulb: Double?
 
-  @OptionGroup var globals: BasePsychrometricOptions
+  @OptionGroup var globals: BaseOptionsWithUnits
 
   func run() async throws {
     @Dependency(\.cliClient) var client

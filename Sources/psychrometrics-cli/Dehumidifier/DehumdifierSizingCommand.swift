@@ -2,37 +2,76 @@ import ArgumentParser
 import CLIClient
 import Dependencies
 import Foundation
+import Rainbow
 
 extension DehumidifierCommand {
   struct SizingCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
       commandName: "size",
-      abstract: "Calculate dehumdifier sizing based on the latent load of a project."
+      abstract: "Calculate dehumdifier sizing based on the latent load of a project.",
+      discussion: """
+      This command can calculate the dehumidifier sizing in pints per day & pints
+      per hour, as well as for different coverages of the latent load based on the
+      passed in percentages.
+      
+      The default command calculates the pints per day & hour for 100% and 85% coverage
+      of the given latent load.  The coverage values can be overriden by using the
+      `--coverage` option.  If the coverage option is the last option before passing
+      in the latent load, then a `--` can be used to separate the coverage values from
+      the latent load.
+      
+      \("Example:".bold)
+      
+      The below will calculate the pints for the coverages 80% and 70%, at the
+      given latent load of 4,334 BTU/hour.
+      
+      `$ psychrometrics dh size --verbose --coverage 80 70 -- 4334`
+      
+      If the options are rearranged then the `--` are not required.
+      
+      `$ psychrometrics dh size --coverage 80 70 --verbose 4334`
+      
+      """
     )
+    
+    @Option(
+      name: .shortAndLong,
+      parsing: .upToNextOption,
+      help: "The coverage percentages to calculate."
+    )
+    var coverage: [Double] = [100, 85]
     
     @Argument
     var latentLoad: Double
     
+    @OptionGroup var globals: BaseOptions
+    
     func run() async throws {
       @Dependency(\.cliClient) var cliClient
       
-      let eightyFivePercentLatent = latentLoad * 0.85
-      let eightyFivePintsPerHour = eightyFivePercentLatent / 1054
-      let eightyFivePintsPerDay = eightyFivePintsPerHour * 24
+      let outputs = try await cliClient.dhClient.sizing(
+        .init(
+          latentLoad: self.latentLoad,
+          percentages: self.coverage
+        )
+      )
       
-      let pintsPerHour = latentLoad / 1054
-      let pintsPerDay = pintsPerHour * 24
+      var printSeparator = false
       
-      print("Full Coverage:")
-      print("-----------------------")
-      print("\(cliClient.string(pintsPerHour, decimalPlaces: 1)) pints/hour")
-      print("\(cliClient.string(pintsPerDay, decimalPlaces: 1)) pints/day")
-      print("-----------------------")
-      print()
-      print("85% Coverage:")
-      print("-----------------------")
-      print("\(cliClient.string(eightyFivePintsPerHour, decimalPlaces: 1)) pints/hour")
-      print("\(cliClient.string(eightyFivePintsPerDay, decimalPlaces: 1)) pints/day")
+      for output in outputs {
+        if printSeparator {
+          print()
+          print("-------------------------")
+        }
+        
+        if globals.verbose {
+          print()
+          print("\(output.percentage * 100)% Coverage:".magenta.bold)
+          print(cliClient.string(output.pintsPerHour, symbol: "pints/hour", withSymbol: self.globals.includeSymbols))
+        }
+        print(cliClient.string(output.pintsPerDay, symbol: "pints/day", withSymbol: self.globals.includeSymbols))
+        printSeparator = true
+      }
       
     }
   }

@@ -9,6 +9,10 @@ extension CLIClient: DependencyKey {
   
   public static func live(client: PsychrometricClient) -> Self {
     .init(
+      dhClient: DHClient(
+        poundsRemoved: { try await $0.output() },
+        sizing: { try await $0.output() }
+      ),
       dewPoint: { try await $0.output(client: client) },
       enthalpy: { try await $0.output(client: client) },
       grains: { try await $0.output(client: client) },
@@ -21,6 +25,106 @@ extension CLIClient: DependencyKey {
   public static var liveValue: CLIClient {
     @Dependency(\.psychrometricClient) var client
     return .live(client: client)
+  }
+}
+
+extension CLIClient.DHClient.Pounds.GrainsEnvelope {
+  init(_ lhs: Double, rhs: Double?) {
+    if let rhs = rhs {
+      self = .pair(lhs, rhs)
+    } else {
+      self = .single(lhs)
+    }
+  }
+  
+  var deltaGrains: Double {
+    switch self {
+    case let .single(value):
+      return value
+    case let .pair(lhs, rhs):
+      if lhs > rhs {
+        return lhs - rhs
+      } else {
+        return rhs - lhs
+      }
+    }
+  }
+}
+
+extension CLIClient.DHClient.Pounds.Request {
+  
+  func envelopes() -> [CLIClient.DHClient.Pounds.GrainsEnvelope] {
+    var values = self.grains
+    var output = [CLIClient.DHClient.Pounds.GrainsEnvelope]()
+    
+    while values.count != 0 {
+      let lhs = values.removeFirst()
+      let rhs = values.first
+      if rhs != nil {
+        values.removeFirst()
+      }
+      output.append(.init(lhs, rhs: rhs))
+    }
+    
+    return output
+  }
+  
+  func poundsRemoved(
+    _ input: CLIClient.DHClient.Pounds.GrainsEnvelope
+  ) -> CLIClient.DHClient.Pounds.PoundsRemovedEnvelope {
+    .init(
+      input,
+      deltaGrains: input.deltaGrains,
+      poundsPerHour: (4.5 * self.cfm * input.deltaGrains) / 7000
+    )
+  }
+  
+  func output() async throws -> CLIClient.DHClient.Pounds.Output {
+    guard grains.count > 0 else {
+      throw ValidationError(
+        """
+        No grains were passed into the calculation.
+        """.red.bold
+      )
+    }
+    
+    return envelopes()
+      .map(self.poundsRemoved(_:))
+  }
+}
+
+extension Double {
+  var fraction: Self {
+    guard self >= 1 else { return self }
+    return self / 100
+  }
+}
+
+
+extension CLIClient.DHClient.Size.PintsEnvelope {
+  
+  init(latent: Double, percentage: Double) {
+    let latent = latent * percentage.fraction
+    self.init(
+      input: latent,
+      percentage: percentage.fraction,
+      pintsPerHour: latent / 1054
+    )
+  }
+}
+
+extension CLIClient.DHClient.Size.Request {
+  
+  func output() async throws -> CLIClient.DHClient.Size.Output {
+    var percentages = self.percentages ?? []
+    
+    if percentages.count == 0 {
+      percentages.insert(100, at: 0)
+    }
+    
+    return percentages.map {
+      .init(latent: self.latentLoad, percentage: $0)
+    }
   }
 }
 
