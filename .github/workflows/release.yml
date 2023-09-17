@@ -80,6 +80,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Set Version
+        run: make set-version
       - name: Bottle
         run: make bottle
         env:
