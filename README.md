@@ -35,3 +35,47 @@ Run commands
 docker run --rm ghcr.io/swift-psychrometrics/psychrometrics-cli <command>
 ```
 
+## Calculations
+
+There are several calculations included for calculating psychrometric properties of
+air streams.
+ 
+These are under the root command.
+
+```bash
+psychrometrics <command>
+```
+
+| Command | Description |
+| ------- | ----------- |
+| properties(default) | Calculates and displays lots of properties of an air sample. |
+| dew-point | Calculate the dew point temperature |
+| enthalpy | Calculate the enthalpy |
+| grains | Calculate the grains of moisture |
+| wet-bulb | Calculate the wet bulb temperature |
+
+There are also several calculations for calculating dehumidifer / dehumidification
+properties. 
+
+These are under the `dh` sub-command.
+
+```bash
+psychrometrics dh <command>
+```
+
+| Command | Description |
+| ------- | ----------- |
+| pounds-removed | Calculate the pounds of water removed |
+| size | Calculate the size / pints per day and hour given the latent load |
+
+### Help
+
+Use `--help` to display help information.
+
+```bash
+psychrometrics --help
+```
+ 
+```bash
+pyschrometrics <command> --help
+```
