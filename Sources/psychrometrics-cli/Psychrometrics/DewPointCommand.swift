@@ -90,7 +90,7 @@ struct DewPointCommand: AsyncParsableCommand {
       )
     )
       .map { client.string($0, withSymbol: globals.includeSymbols) }
-
+    
     print(output)
   }
 }

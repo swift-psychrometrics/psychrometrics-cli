@@ -58,14 +58,13 @@ extension DehumidifierCommand {
       
       var printSeparator = false
       
+      print()
       for output in outputs {
         if printSeparator {
-          print()
           print("-------------------------")
         }
         
         if globals.verbose {
-          print()
           print("\(output.percentage * 100)% Coverage:".magenta.bold)
           print(cliClient.string(output.pintsPerHour, symbol: "pints/hour", withSymbol: self.globals.includeSymbols))
         }

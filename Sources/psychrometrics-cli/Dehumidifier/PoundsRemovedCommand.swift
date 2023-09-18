@@ -104,7 +104,7 @@ extension DehumidifierCommand {
       
       if globals.verbose {
         print()
-        print("CFM:     \(self.cfm)")
+        print("CFM:     \(self.cfm)".lightGreen.bold)
         print()
       }
       
