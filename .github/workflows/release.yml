@@ -7,11 +7,17 @@ on:
   workflow_dispatch:
 
 jobs:
+  ci:
+    name: Run CI
+    uses: .github/workflows/ci.yml@main
+
   release:
     name: Create a release.
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    needs:
+      - ci
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -32,6 +38,8 @@ jobs:
   build-and-push-image:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -77,6 +85,8 @@ jobs:
       matrix:
         os: [macos-12, macos-13]
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3

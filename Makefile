@@ -36,6 +36,7 @@ set-version:
 .PHONY: build
 build: clean
 	swift build --configuration $(CONFIG) \
+		--disable-sandbox \
 		-Xswiftc -cross-module-optimization
 
 .PHONY: build-docker
@@ -54,7 +55,7 @@ uninstall:
 
 .PHONY: clean
 clean:
-	rm -rf .build
+	rm -rf .build || true
 
 .PHONY: run-publish-workflow
 run-publish-workflow:
