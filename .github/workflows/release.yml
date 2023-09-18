@@ -9,7 +9,7 @@ on:
 jobs:
   ci:
     name: Run CI
-    uses: .github/workflows/ci.yml@main
+    uses: ./.github/workflows/ci.yml@main
 
   release:
     name: Create a release.
