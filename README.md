@@ -35,6 +35,19 @@ Run commands
 docker run --rm ghcr.io/swift-psychrometrics/psychrometrics-cli <command>
 ```
 
+### Build and Install on Linux
+
+You can build and install on linux by running the
+[install-linux.sh](https://github.com/swift-psychrometrics/psychrometrics-cli/install-linux.sh)
+script.
+
+> [!NOTE:] Requires podman to be installed / working.
+
+```bash
+git clone https://github.com/swift-psychrometrics/psychrometrics-cli.git
+cd psychrometrics-cli && ./install-linux.sh --destination ~/.local/bin
+```
+
 ## Calculations
 
 There are several calculations included for calculating psychrometric properties of
