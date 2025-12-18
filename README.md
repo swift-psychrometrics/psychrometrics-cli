@@ -38,7 +38,7 @@ docker run --rm ghcr.io/swift-psychrometrics/psychrometrics-cli <command>
 ### Build and Install on Linux
 
 You can build and install on linux by running the
-[install-linux.sh](https://github.com/swift-psychrometrics/psychrometrics-cli/install-linux.sh)
+[install-linux.sh](https://github.com/swift-psychrometrics/psychrometrics-cli/blob/main/install-linux.sh)
 script.
 
 > **NOTE:** Requires podman to be installed / working.
