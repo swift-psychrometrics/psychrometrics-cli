@@ -41,7 +41,7 @@ You can build and install on linux by running the
 [install-linux.sh](https://github.com/swift-psychrometrics/psychrometrics-cli/install-linux.sh)
 script.
 
-> [!NOTE:] Requires podman to be installed / working.
+> **NOTE:** Requires podman to be installed / working.
 
 ```bash
 git clone https://github.com/swift-psychrometrics/psychrometrics-cli.git
